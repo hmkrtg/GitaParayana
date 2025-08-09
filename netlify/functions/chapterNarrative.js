@@ -17,10 +17,8 @@ exports.handler = async (event) => {
     const prompt =
       type === "intro"
         ? [
-            `Write a 5–6 line dramatic INTRODUCTION for Chapter ${chapter} of the Bhagavad Gita.`,
-            `Narrate like an epic mythological prelude for a general audience.`,
-            `Mention the setting and what's about to unfold, but do NOT give away outcomes.`,
-            `Simple, vivid sentences; no philosophy—just story setup.`,
+            `Write a 5–6 line  INTRODUCTION for Chapter ${chapter} of the Bhagavad Gita.`,
+            `Explain what the chapter is about. The main focus of the chapter.`,
           ].join("\n")
         : [
             `Write a 5–6 line dramatic SUMMARY of Chapter ${chapter} of the Bhagavad Gita.`,
