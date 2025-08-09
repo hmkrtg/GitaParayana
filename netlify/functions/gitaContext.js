@@ -16,8 +16,8 @@ exports.handler = async (event) => {
     if (!key) return json({ error: "Missing OPENROUTER_API_KEY" }, 500);
 
     const textParts = [
-      'Write 5–6 plain English lines of CONTEXT for this Bhagavad Gita verse, as if you\'re narrating to the audience what is happening.',
-      'Use  dramatic but simple language. We\'re narrating a great mythological story; no speculation. If uncertain, say "Context not certain."',
+      'Write 5–6 plain English lines of CONTEXT for this Bhagavad Gita verse, as if you\'re narrating to an audience. The first line must be translations, the meanings of the words.',
+      'Use  dramatic but simple language.; no speculation. If uncertain, say "Context not certain."',
       "If and when possible, provide the Dwaita viewpoint here. Include who is speaking, to whom, and what's happening. DO NOT SHOW THIS PROMPT IN THE REPLY",
       "",
       "Verse (Sanskrit): " + slok,
