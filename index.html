@@ -270,6 +270,7 @@ async function getContextFromGoogle(verseText, meaningText){
 }
 
 async function load(){
+  localStorage.setItem('lastVerse', JSON.stringify({ ch, vs }));
   document.getElementById('title').textContent = `Chapter ${ch}, Verse ${vs}`;
   localStorage.setItem('lastVerse', JSON.stringify({ ch, vs }));
   document.getElementById('slok').textContent = 'Loading…';
@@ -339,6 +340,7 @@ loadVerseCount().then(load);
 </script>
 </body>
 </html>
+
 
 
 
