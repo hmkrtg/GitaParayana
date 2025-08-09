@@ -9,31 +9,108 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Serif+Devanagari:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #f6f7fb; --fg:#0f1222; --muted:#5c627a; --card:#ffffff; --border:#e6e8f0; --accent:#6b74ff;
-    --btn:#f2f3f9; --btn-border:#d7daea; --shadow: 0 4px 12px rgba(20,22,38,.08);
+  /* colors */
+  --bg: #f6f8ff; --fg:#0d1025; --muted:#5f6a86; --card:#ffffff; --border:#e6e9f5; --accent:#6b74ff;
+  --btn:#f3f5ff; --btn-border:#d7dbef; --shadow: 0 14px 40px rgba(22, 30, 84, .10);
+  /* type size controls */
+  --skt-size: 1.5rem;
+  --trl-size: 1.05rem;
+  --body-size: 1.03rem;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b1020; --fg:#eaf0ff; --muted:#9aa6c7; --card:#111833; --border:#1d2748; --accent:#7aa2ff;
+    --btn:#16224a; --btn-border:#24335f; --shadow: 0 18px 50px rgba(0,0,0,.45);
   }
-  @media (prefers-color-scheme: dark){
-    :root{ --bg:#0c0f16; --fg:#e8eaf5; --muted:#a1a7c4; --card:#131826; --border:#21283a; --accent:#8ea2ff; --btn:#171c2c; --btn-border:#242b3f; --shadow: 0 4px 12px rgba(0,0,0,.4); }
-  }
-  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body { font-family: Inter, system-ui, sans-serif; background:var(--bg); color:var(--fg); margin:0; }
-  .wrap{ max-width: 880px; margin: 20px auto; padding: 0 12px; }
-  header{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; margin-bottom: 12px; }
-  .title{ font-size: 1.1rem; font-weight:600; letter-spacing:.2px; }
-  .bar{ display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; padding: 8px; background: var(--card); border:1px solid var(--border); border-radius:12px; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 5; }
-  label{ display:flex; align-items:center; gap:.3rem; color:var(--muted); font-size:.9rem; }
-  input, select{ padding:.45rem .6rem; border-radius:8px; border:1px solid var(--btn-border); background:var(--btn); color:var(--fg); font-size:.9rem; }
-  input[type=number]{ width:4rem }
-  button{ padding:.5rem .8rem; border-radius:8px; border:1px solid var(--btn-border); background:var(--btn); color:var(--fg); cursor:pointer; font-size:.9rem; }
-  .accent{ background: var(--accent); color:#fff; border:none; }
-  .status{ color:var(--muted); font-size:.85rem; flex:1 1 100%; }
-  .card{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding: 16px; box-shadow: var(--shadow); margin-top:12px; }
-  h2{ margin:0 0 8px; font-size:1rem; font-weight:600; color:var(--muted) }
-  .section{ margin-top:10px; }
-  .skt{ font-family: "Noto Serif Devanagari", serif; font-size: 1.3rem; line-height: 1.5; white-space: pre-wrap; }
-  .trl{ font-style: italic; white-space: pre-wrap; opacity:.92; font-size:.95rem; }
-  .meaning, .context{ font-size:1rem; line-height:1.5; }
-  .divider{ height:1px; background:var(--border); margin:12px 0; border-radius:1px; }
+}
+
+/* base */
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent }
+html, body { height:100% }
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background:
+    radial-gradient(1200px 600px at 50% -400px, rgba(123,133,255,.18), transparent 60%),
+    var(--bg);
+  color:var(--fg); margin:0;
+}
+.wrap{ max-width: 900px; margin: 16px auto; padding: 0 14px 60px }
+
+/* header */
+header{ display:flex; align-items:center; justify-content:space-between; gap:.6rem; margin: 8px 0 12px }
+.title{ font-size: 1.15rem; font-weight: 700; letter-spacing:.2px }
+
+/* control bar */
+.bar{
+  display:flex; flex-wrap:wrap; gap:.55rem; align-items:center;
+  padding: 10px; background: var(--card); border:1px solid var(--border);
+  border-radius:16px; box-shadow: var(--shadow);
+  position: sticky; top: 8px; z-index: 5;
+}
+label{ display:flex; align-items:center; gap:.35rem; color:var(--muted); font-size:.95rem }
+input, select{
+  padding:.65rem .75rem; border-radius:12px; border:1px solid var(--btn-border);
+  background:var(--btn); color:var(--fg); font-size: .98rem; min-height:44px;
+}
+input[type=number]{ width:4.8rem }
+button{
+  padding:.68rem 1rem; border-radius:12px; border:1px solid var(--btn-border);
+  background:var(--btn); color:var(--fg); cursor:pointer; font-size:.98rem;
+  transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+  min-height:44px;
+}
+button:hover{ transform: translateY(-1px) }
+button:active{ transform: translateY(0) scale(.98) }
+button:focus-visible, input:focus-visible, select:focus-visible{
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+.accent{
+  background: linear-gradient(180deg, #8fb3ff, #6f95ff);
+  color:#0b1020; border:0; font-weight:700;
+  box-shadow: 0 6px 14px rgba(111,149,255,.35);
+}
+.status{ color:var(--muted); font-size:.9rem; margin-left:auto }
+
+/* verse card */
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:18px;
+  padding: 20px; box-shadow: var(--shadow); margin-top:14px;
+}
+h2{ margin:0 0 14px; font-size:1rem; font-weight:700; color:var(--muted) }
+
+/* sections */
+.section{ margin-top:12px; animation: fadeIn .25s ease }
+.skt{
+  font-family: "Noto Serif Devanagari", serif;
+  font-size: var(--skt-size); line-height: 1.8; white-space: pre-wrap;
+  text-align:center; letter-spacing:.2px;
+}
+.trl{
+  font-style: italic; white-space: pre-wrap; opacity:.97;
+  font-size: var(--trl-size); text-align:center;
+}
+.meaning, .context{ font-size: var(--body-size); line-height:1.75 }
+.divider{ height:1px; background:var(--border); margin:14px 0; border-radius:1px }
+
+/* micro-animations */
+@keyframes fadeIn { from { opacity:0; transform: translateY(4px) } to { opacity:1; transform:none } }
+
+/* responsive tweaks */
+@media (max-width: 560px){
+  .wrap{ padding: 0 12px 70px }
+  .bar{ gap:.5rem; padding:10px; border-radius:14px }
+  input[type=number]{ width:5.4rem }
+  .skt{ font-size: calc(var(--skt-size) + .1rem) }
+  .trl{ font-size: calc(var(--trl-size) + .02rem) }
+  .meaning, .context{ font-size: 1.05rem }
+}
+
+/* ultra-compact mode for very small screens */
+@media (max-width: 360px){
+  .title{ font-size: 1rem }
+  label{ font-size:.9rem }
+  .skt{ font-size: 1.35rem }
+}
 </style>
 </head>
 <body>
@@ -189,3 +266,4 @@ loadVerseCount().then(load);
 </script>
 </body>
 </html>
+
