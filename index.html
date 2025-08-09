@@ -29,8 +29,7 @@ body{
     #050815;
   overflow-x:hidden; position:relative; isolation:isolate;
 }
-body::before, body::after
- {
+body::before, body::after{
   /* layered starfields */
   content:""; position:fixed; inset:-10%; z-index:-2; pointer-events:none;
   background:
@@ -52,6 +51,18 @@ body::after{
 @keyframes drift1 { to { transform: translate3d(-6%, -4%, 0) } }
 @keyframes drift2 { to { transform: translate3d(6%, 4%, 0) } }
 
+/* slow conic sweep glow */
+body::marker, body:focus{ outline:none }
+body > .wrap::before{
+  content:""; position:fixed; inset:-30%; z-index:-1; pointer-events:none;
+  background: conic-gradient(from 120deg at 50% 50%, rgba(255,214,107,.18), rgba(127,182,255,.12), transparent 30%);
+  mix-blend-mode: screen; filter: blur(70px); opacity:.35;
+  animation: sweep 22s linear infinite;
+}
+@keyframes sweep { to { transform: rotate(360deg) } }
+@media (prefers-reduced-motion: reduce){ body::before, body::after, .wrap::before { animation: none } }
+
+.wrap{ max-width: 960px; margin: 16px auto; padding: 0 14px 86px }
 
 /* ===== HEADER ===== */
 header{ display:flex; align-items:center; justify-content:space-between; margin:6px 0 12px }
@@ -326,8 +337,5 @@ loadVerseCount().then(load);
 </script>
 </body>
 </html>
-
-
-
 
 
