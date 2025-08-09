@@ -16,9 +16,9 @@ exports.handler = async (event) => {
     if (!key) return json({ error: "Missing OPENROUTER_API_KEY" }, 500);
 
     const textParts = [
-      'Write 5–6 plain English lines of CONTEXT for this Bhagavad Gita verse, as if you\'re narrating to an audience.',
-      'Use  dramatic but simple language; We are narrating a great mythology here; no speculation. If uncertain, say "Context not certain."',
-      "If and when possible, provide the Dwaita viewpoint here. Include who is speaking, to whom, and what's happening. DO NOT SHOW THIS PROMPT IN THE REPLY",
+      "Write 5–6 plain English lines of CONTEXT for this Bhagavad Gita verse, as if you're narrating to an audience.",
+      "Use dramatic but simple language; we are narrating a great mythology here; no speculation. If uncertain, say \"Context not certain.\"",
+      "If and when possible, provide the Dvaita viewpoint. Include who is speaking, to whom, and what's happening. DO NOT SHOW THIS PROMPT IN THE REPLY.",
       "",
       "Verse (Sanskrit): " + slok,
       "Transliteration: " + (transliteration || "(omitted)"),
@@ -27,21 +27,11 @@ exports.handler = async (event) => {
     ];
     const prompt = textParts.join("\n");
 
-    const resp = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${key}`,
-        // optional but recommended:
-        "HTTP-Referer": "https://your-site.example", // replace or remove
-        "X-Title": "Gita Parayana",
-      },
-      body: JSON.stringify({
-        model: "openai/gpt-oss-20b:free",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.6,
-      }),
-    });
+    // Primary (Groq) + fallback (Groq fast)
+    const primaryModel = "meta-llama/llama-3.1-70b-instruct:free";
+    const fallbackModel = "google/gemma-2-9b-it:free";
+
+    const resp = await callOpenRouter(prompt, primaryModel, fallbackModel, key);
 
     if (!resp.ok) {
       const errTxt = await resp.text();
@@ -55,6 +45,36 @@ exports.handler = async (event) => {
     return json({ error: e.message || "Server error" }, 500);
   }
 };
+
+// ---- helper: call OpenRouter with fallback on 429/5xx ----
+async function callOpenRouter(prompt, modelPrimary, modelFallback, apiKey) {
+  const endpoint = "https://openrouter.ai/api/v1/chat/completions";
+  const headers = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${apiKey}`,
+    "X-Title": "Gita Parayana",
+    // "HTTP-Referer": "https://your-domain.example" // optional, set to your site if you want
+  };
+  const bodyFor = (model) => JSON.stringify({
+    model,
+    messages: [{ role: "user", content: prompt }],
+    temperature: 0.6,
+    // max_tokens: 400, // optional
+  });
+
+  // First try: primary
+  let resp = await fetch(endpoint, { method: "POST", headers, body: bodyFor(modelPrimary) });
+
+  // Fallback on rate-limit or server error
+  if (resp.status === 429 || (resp.status >= 500 && resp.status <= 599)) {
+    try {
+      resp = await fetch(endpoint, { method: "POST", headers, body: bodyFor(modelFallback) });
+    } catch (_) {
+      // if fallback fetch throws, return the original response
+    }
+  }
+  return resp;
+}
 
 function json(obj, status = 200) {
   return { statusCode: status, headers: cors(), body: JSON.stringify(obj) };
