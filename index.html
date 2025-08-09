@@ -272,7 +272,6 @@ async function getContextFromGoogle(verseText, meaningText){
 async function load(){
   localStorage.setItem('lastVerse', JSON.stringify({ ch, vs }));
   document.getElementById('title').textContent = `Chapter ${ch}, Verse ${vs}`;
-  localStorage.setItem('lastVerse', JSON.stringify({ ch, vs }));
   document.getElementById('slok').textContent = 'Loading…';
   document.getElementById('trl').textContent = '';
   document.getElementById('meaning').textContent = '';
@@ -331,15 +330,20 @@ const saved = localStorage.getItem('lastVerse');
 if (saved) {
   try {
     const { ch: savedCh, vs: savedVs } = JSON.parse(saved);
-    ch = savedCh;
-    vs = savedVs;
-  } catch(e) {}
+    ch = Number(savedCh) || 1;
+    vs = Number(savedVs) || 1;
+    // reflect in the controls so Go doesn't reset to 1/1
+    document.getElementById('inCh').value = ch;
+    document.getElementById('inVs').value = vs;
+  } catch (e) {}
 }
+
  
 loadVerseCount().then(load);
 </script>
 </body>
 </html>
+
 
 
 
