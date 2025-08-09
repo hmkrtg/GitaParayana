@@ -239,7 +239,7 @@ async function loadVerseCount(){
 async function getContextFromGoogle(verseText, meaningText){
   try {
     const cacheKey = `ctx:${ch}.${vs}`;
-    const cached = sessionStorage.getItem(cacheKey);
+    const cached = localStorage.getItem(cacheKey);
     if (cached) return cached;
 
     const res = await fetch('/.netlify/functions/gitaContext', {
@@ -261,7 +261,7 @@ async function getContextFromGoogle(verseText, meaningText){
     }
 
     const text = (data && data.context) ? String(data.context) : '';
-    if (text) sessionStorage.setItem(cacheKey, text);
+    if (text) localStorage.setItem(cacheKey, text);
     return text || 'Context unavailable.';
   } catch (e) {
     console.error('gitaContext fetch failed:', e);
@@ -329,6 +329,7 @@ loadVerseCount().then(load);
 </script>
 </body>
 </html>
+
 
 
 
