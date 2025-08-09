@@ -248,7 +248,6 @@ h2{ margin:0 0 18px; font-size:1.04rem; font-weight:900; color:var(--muted); pos
 "></div>
     </div>
   </div>
-
 <script>
 const API_BASE = 'https://vedicscriptures.github.io';
 let ch = 1, vs = 1;
@@ -259,62 +258,47 @@ async function fetchJson(u){
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
-// ---- Context cache cleaner (7-day TTL) ----
+
+/* ---------- Cache sweeper (7-day TTL) ---------- */
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
-const CACHE_PREFIXES = ['ctx:', 'ctx_en:', 'ctx_te:']; // cover current & future keys
+const CACHE_PREFIXES = ['ctx:', 'ctx_en:', 'ctx_te:', 'narrative:'];
 
 function cleanExpiredCache() {
   const now = Date.now();
   const keys = [];
-
-  // collect first (don't delete while iterating localStorage indexes)
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
     if (k && CACHE_PREFIXES.some(p => k.startsWith(p))) keys.push(k);
   }
-
   for (const k of keys) {
     try {
       const raw = localStorage.getItem(k);
       const obj = JSON.parse(raw);
       const ts = obj?.ts;
-
-      // remove if missing timestamp (old format) or older than TTL
-      if (!ts || (now - ts) > CACHE_TTL_MS) {
-        localStorage.removeItem(k);
-      }
+      if (!ts || (now - ts) > CACHE_TTL_MS) localStorage.removeItem(k);
     } catch {
-      // not JSON (old string cache) → remove so it refreshes
-      localStorage.removeItem(k);
+      localStorage.removeItem(k); // legacy string cache
     }
   }
 }
+
 async function loadVerseCount(){
   const chapters = await fetchJson(`${API_BASE}/chapters`);
   chapters.forEach(c => versesInChapter[c.chapter_number] = c.verses_count);
 }
 
-// Fetch short context via Netlify function backed by Google Gemini API (server-side key)
-
+/* ---------- Verse context via Netlify function ---------- */
 async function getContextFromGoogle(verseText, meaningText){
   try {
     const cacheKey = `ctx:${ch}.${vs}`;
     const cachedRaw = localStorage.getItem(cacheKey);
-
-    // If cache exists and is less than 7 days old, return it
     if (cachedRaw) {
       try {
         const cachedObj = JSON.parse(cachedRaw);
-        const oneWeek = 7 * 24 * 60 * 60 * 1000;
-        if (Date.now() - cachedObj.ts < oneWeek) {
-          return cachedObj.text;
-        }
-      } catch(e) {
-        // ignore JSON parse errors
-      }
+        if (Date.now() - cachedObj.ts < CACHE_TTL_MS) return cachedObj.text;
+      } catch {}
     }
 
-    // Fetch from API if no valid cache
     const res = await fetch('/.netlify/functions/gitaContext', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -325,7 +309,6 @@ async function getContextFromGoogle(verseText, meaningText){
         meaning: meaningText
       })
     });
-
     const data = await res.json();
 
     if (!res.ok || data?.error) {
@@ -334,12 +317,7 @@ async function getContextFromGoogle(verseText, meaningText){
     }
 
     const text = (data && data.context) ? String(data.context) : '';
-    if (text) {
-      localStorage.setItem(cacheKey, JSON.stringify({
-        text,
-        ts: Date.now()
-      }));
-    }
+    if (text) localStorage.setItem(cacheKey, JSON.stringify({ text, ts: Date.now() }));
     return text || 'Context unavailable.';
   } catch (e) {
     console.error('gitaContext fetch failed:', e);
@@ -347,6 +325,38 @@ async function getContextFromGoogle(verseText, meaningText){
   }
 }
 
+/* ---------- Chapter intro/summary via Netlify function ---------- */
+const NARR_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+async function getChapterNarrative(type) {
+  const cacheKey = `narrative:${type}:ch${ch}`;
+  const now = Date.now();
+
+  const raw = localStorage.getItem(cacheKey);
+  if (raw) {
+    try {
+      const { text, ts } = JSON.parse(raw);
+      if (text && (now - ts) < NARR_TTL_MS) return text;
+    } catch {}
+  }
+
+  try {
+    const res = await fetch('/.netlify/functions/chapterNarrative', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chapter: ch, type })
+    });
+    const data = await res.json();
+    const text = (data && data.text) ? String(data.text).trim() : '';
+    if (text) localStorage.setItem(cacheKey, JSON.stringify({ text, ts: now }));
+    return text || 'Narrative unavailable.';
+  } catch (e) {
+    console.error('chapterNarrative error:', e);
+    return 'Narrative unavailable.';
+  }
+}
+
+/* ---------- Main load ---------- */
 async function load(){
   localStorage.setItem('lastVerse', JSON.stringify({ ch, vs }));
   document.getElementById('title').textContent = `Chapter ${ch}, Verse ${vs}`;
@@ -368,16 +378,41 @@ async function load(){
       }
     }
     document.getElementById('meaning').textContent = meaning;
-    // AI Context (if function deployed)
+
+    // AI Context
     document.getElementById('context').textContent = 'Loading context…';
     const contextText = await getContextFromGoogle(data.slok, meaning);
     document.getElementById('context').textContent = contextText;
+
+    // ---- Chapter Intro / Summary ----
+    const introEl = document.getElementById('chapterIntro');
+    const summaryEl = document.getElementById('chapterSummary');
+
+    // Intro at verse 1
+    if (vs === 1) {
+      introEl.style.display = 'block';
+      introEl.textContent = 'Loading chapter intro…';
+      getChapterNarrative('intro').then(t => introEl.textContent = t);
+    } else {
+      introEl.style.display = 'none';
+    }
+
+    // Summary at last verse
+    const last = versesInChapter[ch];
+    if (last && vs === last) {
+      summaryEl.style.display = 'block';
+      summaryEl.textContent = 'Loading chapter summary…';
+      getChapterNarrative('summary').then(t => summaryEl.textContent = t);
+    } else {
+      summaryEl.style.display = 'none';
+    }
   } catch (e) {
     document.getElementById('slok').textContent = 'Failed to load verse.';
     document.getElementById('context').textContent = '';
   }
 }
 
+/* ---------- Navigation ---------- */
 function goTo(){
   const c = parseInt(document.getElementById('inCh').value, 10) || 1;
   const v = parseInt(document.getElementById('inVs').value, 10) || 1;
@@ -395,7 +430,6 @@ document.getElementById('next').onclick = () => {
   if (vs < versesInChapter[ch]) vs += 1; else if (ch < 18) { ch += 1; vs = 1; document.getElementById('inCh').value = ch; }
   document.getElementById('inVs').value = vs; load();
 };
-
 document.getElementById('translator').onchange = load;
 
 window.addEventListener('keydown', (e) => {
@@ -403,32 +437,25 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') document.getElementById('prev').click();
   if (e.key === 'ArrowRight') document.getElementById('next').click();
 });
- 
+
+/* ---------- Restore last verse, clean cache, boot ---------- */
 const saved = localStorage.getItem('lastVerse');
 if (saved) {
   try {
     const { ch: savedCh, vs: savedVs } = JSON.parse(saved);
     ch = Number(savedCh) || 1;
     vs = Number(savedVs) || 1;
-    // reflect in the controls so Go doesn't reset to 1/1
     document.getElementById('inCh').value = ch;
     document.getElementById('inVs').value = vs;
-  } catch (e) {}
+  } catch {}
 }
-// Restore last saved verse before loading (your block) ...
-// ...
-
-// Purge old/legacy cached contexts
 cleanExpiredCache();
-
-// Boot
-loadVerseCount().then(load);
-
- 
 loadVerseCount().then(load);
 </script>
+
 </body>
 </html>
+
 
 
 
