@@ -20,7 +20,7 @@ exports.handler = async (event) => {
     if (!apiKey) return json({ error: "Missing GEMINI_API_KEY" }, 500);
 
     const textParts = [
-      "Write 3–4 plain-English lines of neutral CONTEXT for this Bhagavad Gita verse.",
+      "Write 5-6 plain English lines of CONTEXT for this Bhagavad Gita verse, as if you're narrating to the audience of what is happening.",
       "Use very dramatic but simple language. We're trying to narrate a great mythological story; no speculation. If uncertain, say \"Context not certain.\"",
       "Include who is speaking, to whom, and what's happening.",
       "",
