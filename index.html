@@ -244,7 +244,36 @@ async function fetchJson(u){
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
+// ---- Context cache cleaner (7-day TTL) ----
+const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const CACHE_PREFIXES = ['ctx:', 'ctx_en:', 'ctx_te:']; // cover current & future keys
 
+function cleanExpiredCache() {
+  const now = Date.now();
+  const keys = [];
+
+  // collect first (don't delete while iterating localStorage indexes)
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && CACHE_PREFIXES.some(p => k.startsWith(p))) keys.push(k);
+  }
+
+  for (const k of keys) {
+    try {
+      const raw = localStorage.getItem(k);
+      const obj = JSON.parse(raw);
+      const ts = obj?.ts;
+
+      // remove if missing timestamp (old format) or older than TTL
+      if (!ts || (now - ts) > CACHE_TTL_MS) {
+        localStorage.removeItem(k);
+      }
+    } catch {
+      // not JSON (old string cache) → remove so it refreshes
+      localStorage.removeItem(k);
+    }
+  }
+}
 async function loadVerseCount(){
   const chapters = await fetchJson(`${API_BASE}/chapters`);
   chapters.forEach(c => versesInChapter[c.chapter_number] = c.verses_count);
@@ -255,9 +284,22 @@ async function loadVerseCount(){
 async function getContextFromGoogle(verseText, meaningText){
   try {
     const cacheKey = `ctx:${ch}.${vs}`;
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) return cached;
+    const cachedRaw = localStorage.getItem(cacheKey);
 
+    // If cache exists and is less than 7 days old, return it
+    if (cachedRaw) {
+      try {
+        const cachedObj = JSON.parse(cachedRaw);
+        const oneWeek = 7 * 24 * 60 * 60 * 1000;
+        if (Date.now() - cachedObj.ts < oneWeek) {
+          return cachedObj.text;
+        }
+      } catch(e) {
+        // ignore JSON parse errors
+      }
+    }
+
+    // Fetch from API if no valid cache
     const res = await fetch('/.netlify/functions/gitaContext', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -277,7 +319,12 @@ async function getContextFromGoogle(verseText, meaningText){
     }
 
     const text = (data && data.context) ? String(data.context) : '';
-    if (text) localStorage.setItem(cacheKey, text);
+    if (text) {
+      localStorage.setItem(cacheKey, JSON.stringify({
+        text,
+        ts: Date.now()
+      }));
+    }
     return text || 'Context unavailable.';
   } catch (e) {
     console.error('gitaContext fetch failed:', e);
@@ -353,12 +400,21 @@ if (saved) {
     document.getElementById('inVs').value = vs;
   } catch (e) {}
 }
+// Restore last saved verse before loading (your block) ...
+// ...
+
+// Purge old/legacy cached contexts
+cleanExpiredCache();
+
+// Boot
+loadVerseCount().then(load);
 
  
 loadVerseCount().then(load);
 </script>
 </body>
 </html>
+
 
 
 
