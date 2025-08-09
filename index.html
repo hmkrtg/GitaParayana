@@ -15,6 +15,11 @@
   --btn:#111a45; --btn-border:#243070; --shadow:0 26px 70px rgba(0,0,0,.6);
   --skt-size: 2rem; --trl-size: 1.08rem; --body-size: 1.08rem;
 }
+select option:disabled {
+  color: #aaa !important;       /* brighter than default */
+  background-color: #0a1132;    /* match your dark UI */
+  opacity: 1 !important;        /* stop browser from fading */
+}
 
 /* ===== BACKGROUND: starfield + aurora sweep ===== */
 *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent }
@@ -343,6 +348,7 @@ loadVerseCount().then(load);
 </script>
 </body>
 </html>
+
 
 
 
