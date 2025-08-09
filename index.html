@@ -15,10 +15,21 @@
   --btn:#111a45; --btn-border:#243070; --shadow:0 26px 70px rgba(0,0,0,.6);
   --skt-size: 2rem; --trl-size: 1.08rem; --body-size: 1.08rem;
 }
+select, select option {
+  background-color: var(--btn) !important;   /* Dark glassy background */
+  color: var(--fg) !important;               /* Bright text */
+}
+
+select option:hover,
+select option:focus {
+  background-color: var(--gold) !important;  /* Glowing gold highlight */
+  color: #2b2100 !important;                 /* Deep brown text for contrast */
+}
 select option:hover,
 select option:focus {
   background-color: var(--gold) !important;
-  color: #000 !important;
+  color: #2b2100 !important;
+  text-shadow: 0 0 6px rgba(255,214,107,0.8);
 }
 
 /* ===== BACKGROUND: starfield + aurora sweep ===== */
@@ -348,6 +359,7 @@ loadVerseCount().then(load);
 </script>
 </body>
 </html>
+
 
 
 
