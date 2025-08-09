@@ -125,14 +125,6 @@ button:focus-visible, input:focus-visible, select:focus-visible{
   background: radial-gradient(420px 260px at 50% 6%, rgba(255,214,107,.20), transparent 60%);
   filter: blur(12px);
 }
-.card::after{
-  /* soft moving sheen */
-  content:""; position:absolute; top:-40%; bottom:-40%; width:35%;
-  left:-20%; transform: rotate(20deg); z-index:1;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.09), transparent);
-  animation: sheen 8s ease-in-out infinite;
-}
-@keyframes sheen { 0%{ left:-30% } 50%{ left:70% } 100%{ left:-30% } }
 
 h2{ margin:0 0 18px; font-size:1.04rem; font-weight:900; color:var(--muted); position:relative; z-index:2 }
 
@@ -337,5 +329,6 @@ loadVerseCount().then(load);
 </script>
 </body>
 </html>
+
 
 
