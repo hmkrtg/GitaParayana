@@ -21,7 +21,7 @@ exports.handler = async (event) => {
 
     const textParts = [
       "Write 3–4 plain-English lines of neutral CONTEXT for this Bhagavad Gita verse.",
-      "Avoid sectarian doctrine; no speculation. If uncertain, say \"Context not certain.\"",
+      "Use very dramatic language. We're trying to narrate a great mythological story; no speculation. If uncertain, say \"Context not certain.\"",
       "Include who is speaking, to whom, and what's happening.",
       "",
       "Verse (Sanskrit): " + slok,
