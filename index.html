@@ -9,58 +9,31 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Serif+Devanagari:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0b1020; --fg:#eaf0ff; --muted:#9aa6c7; --card:#121933; --border:#1d2542; --accent:#7aa2ff;
-    --btn:#152046; --btn-border:#2a3561; --shadow: 0 12px 40px rgba(0,0,0,.35);
-    --skt-size: 1.45rem; /* dynamic via A-/A+ */
+    --bg: #f6f7fb; --fg:#0f1222; --muted:#5c627a; --card:#ffffff; --border:#e6e8f0; --accent:#6b74ff;
+    --btn:#f2f3f9; --btn-border:#d7daea; --shadow: 0 4px 12px rgba(20,22,38,.08);
   }
-  @media (prefers-color-scheme: light){
-    :root{ --bg:#f6f7fb; --fg:#0f1222; --muted:#5c627a; --card:#ffffff; --border:#e6e8f0; --accent:#6b74ff; --btn:#f2f3f9; --btn-border:#d7daea; --shadow: 0 10px 30px rgba(20,22,38,.08); }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0c0f16; --fg:#e8eaf5; --muted:#a1a7c4; --card:#131826; --border:#21283a; --accent:#8ea2ff; --btn:#171c2c; --btn-border:#242b3f; --shadow: 0 4px 12px rgba(0,0,0,.4); }
   }
-  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent }
-  html,body{ height:100% }
-  body{ font-family: Inter, system-ui, sans-serif; background: radial-gradient(1200px 500px at 50% -80px, #1a2454 0%, transparent 60%), var(--bg); color:var(--fg); margin:0 }
-  .wrap{ max-width: 900px; margin: 0 auto; padding: 12px 14px 80px }
-
-  /* Top banner */
-  .hero{ background: linear-gradient(135deg, #1b275b, #0f1739); border:1px solid var(--border); border-radius:18px; box-shadow: var(--shadow); padding: 14px 14px; margin:12px 0 10px; position: sticky; top: 8px; z-index: 5 }
-  .row{ display:flex; gap:.5rem; align-items:center; flex-wrap:wrap }
-  label{ display:flex; align-items:center; gap:.35rem; color:var(--muted); font-size:.92rem }
-  input, select{ padding:.6rem .7rem; border-radius:10px; border:1px solid var(--btn-border); background:var(--btn); color:var(--fg); font-size:.95rem }
-  input[type=number]{ width:4.6rem }
-  button{ padding:.65rem 1rem; border-radius:12px; border:1px solid var(--btn-border); background:var(--btn); color:var(--fg); cursor:pointer; font-size:.95rem }
-  .accent{ background: linear-gradient(180deg, #8eb6ff, #6f95ff); border:0; color:#0b1020; font-weight:600 }
-  .ghost{ background:transparent; border-color:var(--btn-border) }
-  .status{ color:var(--muted); font-size:.9rem; margin-left:auto }
-
-  /* Card */
-  .card{ background:var(--card); border:1px solid var(--border); border-radius:18px; padding:20px; box-shadow: var(--shadow); margin-top:14px }
-  h2{ margin:0 0 12px; font-size:.98rem; font-weight:600; color:var(--muted) }
-  .section{ margin-top:12px }
-  .skt{ font-family:"Noto Serif Devanagari", serif; font-size: var(--skt-size); line-height:1.7; white-space:pre-wrap; text-align:center; letter-spacing:.2px; animation: fadeIn .3s ease }
-  .trl{ font-style: italic; white-space:pre-wrap; opacity:.95; font-size:1.02rem; text-align:center }
-  .meaning, .context{ font-size:1.06rem; line-height:1.7 }
-  .divider{ height:1px; background:var(--border); margin:14px 0; border-radius:1px }
-
-  /* Progress bar */
-  .progress{ height:8px; background:rgba(122,162,255,.18); border:1px solid var(--border); border-radius:999px; overflow:hidden; margin-top:10px }
-  .bar{ height:100%; width:0; background:linear-gradient(90deg, #7aa2ff, #b5c8ff) }
-
-  /* Bottom sticky nav */
-  .dock{ position:fixed; left:0; right:0; bottom:10px; display:flex; justify-content:center; pointer-events:none }
-  .dock-inner{ pointer-events:auto; display:flex; gap:.6rem; background:rgba(13,18,43,.6); backdrop-filter: blur(10px); border:1px solid var(--border); padding:6px; border-radius:16px }
-  .dock button{ min-width:56px }
-
-  /* Controls on right: A-/A+, Focus, WakeLock */
-  .tools{ display:flex; gap:.4rem; margin-left:auto }
-
-  @keyframes fadeIn{ from{ opacity:0; transform: translateY(4px) } to{ opacity:1; transform:none } }
-
-  @media (max-width:560px){
-    .row{ gap:.4rem }
-    .hero{ top: 0; border-radius:14px }
-    .skt{ font-size: calc(var(--skt-size) + .05rem) }
-    .trl{ font-size:1rem }
-  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family: Inter, system-ui, sans-serif; background:var(--bg); color:var(--fg); margin:0; }
+  .wrap{ max-width: 880px; margin: 20px auto; padding: 0 12px; }
+  header{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; margin-bottom: 12px; }
+  .title{ font-size: 1.1rem; font-weight:600; letter-spacing:.2px; }
+  .bar{ display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; padding: 8px; background: var(--card); border:1px solid var(--border); border-radius:12px; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 5; }
+  label{ display:flex; align-items:center; gap:.3rem; color:var(--muted); font-size:.9rem; }
+  input, select{ padding:.45rem .6rem; border-radius:8px; border:1px solid var(--btn-border); background:var(--btn); color:var(--fg); font-size:.9rem; }
+  input[type=number]{ width:4rem }
+  button{ padding:.5rem .8rem; border-radius:8px; border:1px solid var(--btn-border); background:var(--btn); color:var(--fg); cursor:pointer; font-size:.9rem; }
+  .accent{ background: var(--accent); color:#fff; border:none; }
+  .status{ color:var(--muted); font-size:.85rem; flex:1 1 100%; }
+  .card{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding: 16px; box-shadow: var(--shadow); margin-top:12px; }
+  h2{ margin:0 0 8px; font-size:1rem; font-weight:600; color:var(--muted) }
+  .section{ margin-top:10px; }
+  .skt{ font-family: "Noto Serif Devanagari", serif; font-size: 1.3rem; line-height: 1.5; white-space: pre-wrap; }
+  .trl{ font-style: italic; white-space: pre-wrap; opacity:.92; font-size:.95rem; }
+  .meaning, .context{ font-size:1rem; line-height:1.5; }
+  .divider{ height:1px; background:var(--border); margin:12px 0; border-radius:1px; }
 </style>
 </head>
 <body>
@@ -69,48 +42,30 @@
       <div class="title">Bhagavad Gita — One Verse</div>
     </header>
 
-    <div class="hero">
-      <div class="row">
-        <label>Ch <input type="number" id="inCh" min="1" value="1"></label>
-        <label>Vs <input type="number" id="inVs" min="1" value="1"></label>
-        <button id="go" class="accent">Go</button>
-        <button id="prev">◀</button>
-        <button id="next">▶</button>
-        <label>Trans
-          <select id="translator">
-            <option value="auto" selected>Auto</option>
-            <option value="purohit">Purohit</option>
-            <option value="siva">Sivananda</option>
-            <option value="tej">Tejomayananda</option>
-            <option value="gambir">Gambhirananda</option>
-            <option value="chinmay">Chinmayananda</option>
-            <option value="prabhupada">Prabhupada</option>
-          </select>
-        </label>
-        <div class="tools">
-          <button id="dec" class="ghost" title="Smaller">A−</button>
-          <button id="inc" class="ghost" title="Larger">A+</button>
-        </div>
-        <span class="status" id="status">API: vedicscriptures.github.io</span>
-      </div>
+    <div class="bar">
+      <label>Ch <input type="number" id="inCh" min="1" value="1"></label>
+      <label>Vs <input type="number" id="inVs" min="1" value="1"></label>
+      <button id="go" class="accent">Go</button>
+      <button id="prev">◀</button>
+      <button id="next">▶</button>
+      <label>Trans
+        <select id="translator">
+          <option value="auto" selected>Auto</option>
+          <option value="purohit">Purohit</option>
+          <option value="siva">Sivananda</option>
+          <option value="tej">Tejomayananda</option>
+          <option value="gambir">Gambhirananda</option>
+          <option value="chinmay">Chinmayananda</option>
+          <option value="prabhupada">Prabhupada</option>
+        </select>
+      </label>
+      <span class="status" id="status">API: vedicscriptures.github.io</span>
     </div>
 
     <div class="card">
       <h2 id="title">Chapter 1, Verse 1</h2>
-      <div class="progress"><div class="bar" id="progressBar"></div></div>
-      <div class="section"><div class="skt" id="slok">Loading…</div></div>
-      <div class="divider"></div>
-      <div class="section"><div class="trl" id="trl"></div></div>
-      <div class="divider"></div>
-      <div class="section meaning" id="meaning"></div>
-      <div class="divider"></div>
-      <div class="section context" id="context"></div>
-    </div>
-
-    <div class="dock"><div class="dock-inner">
-      <button id="prev2">◀ Prev</button>
-      <button id="next2" class="accent">Next ▶</button>
-    </div></div>
+      <div class="section">
+        <div class="skt" id="slok">Loading…</div>
       </div>
       <div class="divider"></div>
       <div class="section">
@@ -125,44 +80,112 @@
 
 <script>
 const API_BASE = 'https://vedicscriptures.github.io';
-let ch = 1, vs = 1; let versesInChapter = {}; let sktSize = 1.45;
+let ch = 1, vs = 1;
+let versesInChapter = {};
 
-async function fetchJson(u){ const res = await fetch(u); if(!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); }
-async function loadVerseCount(){ const chapters = await fetchJson(`${API_BASE}/chapters`); chapters.forEach(c => versesInChapter[c.chapter_number] = c.verses_count); }
-async function getContextFromGoogle(verseText, meaningText){
-  try{
-    const cacheKey = `ctx:${ch}.${vs}`; const cached = sessionStorage.getItem(cacheKey); if(cached) return cached;
-    const res = await fetch('/.netlify/functions/gitaContext',{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ chapter: ch, verse: vs, slok: verseText, transliteration: document.getElementById('trl').textContent, meaning: meaningText })});
-    const data = await res.json(); if(!res.ok || data?.error){ console.error('gitaContext error:', data?.error||res.status); return `Context unavailable (${data?.error||'HTTP '+res.status}).`; }
-    const text = data?.context? String(data.context):''; if(text) sessionStorage.setItem(cacheKey,text); return text||'Context unavailable.';
-  }catch(e){ console.error('ctx fail',e); return 'Context unavailable (network error).'; }
+async function fetchJson(u){
+  const res = await fetch(u);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
 }
-function updateProgress(){ const total = versesInChapter[ch]||1; const pct = Math.max(0, Math.min(100, (vs-1)/total*100)); document.getElementById('progressBar').style.width = pct+'%'; }
+
+async function loadVerseCount(){
+  const chapters = await fetchJson(`${API_BASE}/chapters`);
+  chapters.forEach(c => versesInChapter[c.chapter_number] = c.verses_count);
+}
+
+// Fetch short context via Netlify function backed by Google Gemini API (server-side key)
+
+async function getContextFromGoogle(verseText, meaningText){
+  try {
+    const cacheKey = `ctx:${ch}.${vs}`;
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) return cached;
+
+    const res = await fetch('/.netlify/functions/gitaContext', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chapter: ch, verse: vs,
+        slok: verseText,
+        transliteration: document.getElementById('trl').textContent,
+        meaning: meaningText
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || data?.error) {
+      console.error('gitaContext error:', data?.error || res.status);
+      return `Context unavailable (${data?.error || 'HTTP ' + res.status}).`;
+    }
+
+    const text = (data && data.context) ? String(data.context) : '';
+    if (text) sessionStorage.setItem(cacheKey, text);
+    return text || 'Context unavailable.';
+  } catch (e) {
+    console.error('gitaContext fetch failed:', e);
+    return 'Context unavailable (network error).';
+  }
+}
+
 async function load(){
   document.getElementById('title').textContent = `Chapter ${ch}, Verse ${vs}`;
-  document.getElementById('slok').textContent = 'Loading…'; document.documentElement.style.setProperty('--skt-size', sktSize+'rem');
-  document.getElementById('trl').textContent = ''; document.getElementById('meaning').textContent = ''; document.getElementById('context').textContent = '';
-  try{ const data = await fetchJson(`${API_BASE}/slok/${ch}/${vs}`);
-    document.getElementById('slok').textContent = data.slok||'—'; document.getElementById('trl').textContent = data.transliteration||'';
-    const explicit = document.getElementById('translator').value; const prefer = explicit==='auto'?[ 'purohit','siva','tej','gambir','chinmay','prabhupada']:[explicit];
-    let meaning = 'Meaning unavailable for this verse.'; for(const key of prefer){ if(data[key] && (data[key].et||data[key].hc||data[key].en)){ meaning = data[key].et||data[key].en||data[key].hc; break; }}
-    document.getElementById('meaning').textContent = meaning; document.getElementById('context').textContent = 'Loading context…';
-    updateProgress(); const contextText = await getContextFromGoogle(data.slok, meaning); document.getElementById('context').textContent = contextText;
-  }catch(e){ document.getElementById('slok').textContent = 'Failed to load verse.'; document.getElementById('context').textContent=''; }
+  document.getElementById('slok').textContent = 'Loading…';
+  document.getElementById('trl').textContent = '';
+  document.getElementById('meaning').textContent = '';
+  document.getElementById('context').textContent = '';
+  try {
+    const data = await fetchJson(`${API_BASE}/slok/${ch}/${vs}`);
+    document.getElementById('slok').textContent = data.slok || '—';
+    document.getElementById('trl').textContent = data.transliteration || '';
+    const explicit = document.getElementById('translator').value;
+    const prefer = explicit === 'auto' ? ['purohit','siva','tej','gambir','chinmay','prabhupada'] : [explicit];
+    let meaning = 'Meaning unavailable for this verse.';
+    for (const key of prefer) {
+      if (data[key] && (data[key].et || data[key].hc || data[key].en)) {
+        meaning = data[key].et || data[key].en || data[key].hc;
+        break;
+      }
+    }
+    document.getElementById('meaning').textContent = meaning;
+    // AI Context (if function deployed)
+    document.getElementById('context').textContent = 'Loading context…';
+    const contextText = await getContextFromGoogle(data.slok, meaning);
+    document.getElementById('context').textContent = contextText;
+  } catch (e) {
+    document.getElementById('slok').textContent = 'Failed to load verse.';
+    document.getElementById('context').textContent = '';
+  }
 }
-function goTo(){ const c = parseInt(document.getElementById('inCh').value,10)||1; const v = parseInt(document.getElementById('inVs').value,10)||1; ch = Math.max(1, Math.min(18, c)); vs = Math.max(1, Math.min(versesInChapter[ch]||50, v)); load(); }
-function prevVerse(){ if(vs>1) vs-=1; else if(ch>1){ ch-=1; vs = versesInChapter[ch]; document.getElementById('inCh').value = ch; } document.getElementById('inVs').value = vs; load(); }
-function nextVerse(){ if(vs < (versesInChapter[ch]||999)) vs+=1; else if(ch<18){ ch+=1; vs=1; document.getElementById('inCh').value = ch; } document.getElementById('inVs').value = vs; load(); }
 
-// Events
-['prev','prev2'].forEach(id=> document.getElementById(id).onclick = prevVerse);
-['next','next2'].forEach(id=> document.getElementById(id).onclick = nextVerse);
-document.getElementById('go').onclick = goTo; document.getElementById('translator').onchange = load;
-window.addEventListener('keydown', (e)=>{ if(e.key==='Enter') goTo(); if(e.key==='ArrowLeft') prevVerse(); if(e.key==='ArrowRight') nextVerse(); });
+function goTo(){
+  const c = parseInt(document.getElementById('inCh').value, 10) || 1;
+  const v = parseInt(document.getElementById('inVs').value, 10) || 1;
+  ch = Math.max(1, Math.min(18, c));
+  vs = Math.max(1, Math.min(versesInChapter[ch] || 50, v));
+  load();
+}
 
-// Font size controls
-function setSize(delta){ sktSize = Math.max(1.2, Math.min(2.2, sktSize + delta)); document.documentElement.style.setProperty('--skt-size', sktSize+'rem'); }
-document.getElementById('inc').onclick = ()=> setSize(+0.08);
-document.getElementById('dec').onclick = ()=> setSize(-0.08);
+document.getElementById('go').onclick = goTo;
+document.getElementById('prev').onclick = () => {
+  if (vs > 1) vs -= 1; else if (ch > 1) { ch -= 1; vs = versesInChapter[ch]; document.getElementById('inCh').value = ch; }
+  document.getElementById('inVs').value = vs; load();
+};
+document.getElementById('next').onclick = () => {
+  if (vs < versesInChapter[ch]) vs += 1; else if (ch < 18) { ch += 1; vs = 1; document.getElementById('inCh').value = ch; }
+  document.getElementById('inVs').value = vs; load();
+};
 
-loadVerseCount().then(()=>{ document.getElementById('inVs').value = vs; load(); });
+document.getElementById('translator').onchange = load;
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') goTo();
+  if (e.key === 'ArrowLeft') document.getElementById('prev').click();
+  if (e.key === 'ArrowRight') document.getElementById('next').click();
+});
+
+loadVerseCount().then(load);
+</script>
+</body>
+</html>
