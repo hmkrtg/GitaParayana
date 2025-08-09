@@ -17,8 +17,8 @@ exports.handler = async (event) => {
 
     const textParts = [
       'Write 5–6 plain English lines of CONTEXT for this Bhagavad Gita verse, as if you\'re narrating to the audience what is happening.',
-      'Use very dramatic but simple language. We\'re narrating a great mythological story; no speculation. If uncertain, say "Context not certain."',
-      "Include who is speaking, to whom, and what's happening.",
+      'Use  dramatic but simple language. We're narrating a great mythological story; no speculation. If uncertain, say "Context not certain."',
+      "If and when possible, provide the Dwaita viewpoint here. Include who is speaking, to whom, and what's happening.",
       "",
       "Verse (Sanskrit): " + slok,
       "Transliteration: " + (transliteration || "(omitted)"),
