@@ -95,6 +95,7 @@ async function loadVerseCount(){
 }
 
 // Fetch short context via Netlify function backed by Google Gemini API (server-side key)
+
 async function getContextFromGoogle(verseText, meaningText){
   try {
     const cacheKey = `ctx:${ch}.${vs}`;
@@ -111,12 +112,20 @@ async function getContextFromGoogle(verseText, meaningText){
         meaning: meaningText
       })
     });
+
     const data = await res.json();
+
+    if (!res.ok || data?.error) {
+      console.error('gitaContext error:', data?.error || res.status);
+      return `Context unavailable (${data?.error || 'HTTP ' + res.status}).`;
+    }
+
     const text = (data && data.context) ? String(data.context) : '';
     if (text) sessionStorage.setItem(cacheKey, text);
-    return text;
-  } catch(e) {
-    return '';
+    return text || 'Context unavailable.';
+  } catch (e) {
+    console.error('gitaContext fetch failed:', e);
+    return 'Context unavailable (network error).';
   }
 }
 
@@ -143,7 +152,7 @@ async function load(){
     // AI Context (if function deployed)
     document.getElementById('context').textContent = 'Loading context…';
     const contextText = await getContextFromGoogle(data.slok, meaning);
-    document.getElementById('context').textContent = contextText || '';
+    document.getElementById('context').textContent = contextText;
   } catch (e) {
     document.getElementById('slok').textContent = 'Failed to load verse.';
     document.getElementById('context').textContent = '';
@@ -180,3 +189,4 @@ loadVerseCount().then(load);
 </script>
 </body>
 </html>
+
