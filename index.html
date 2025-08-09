@@ -271,6 +271,7 @@ async function getContextFromGoogle(verseText, meaningText){
 
 async function load(){
   document.getElementById('title').textContent = `Chapter ${ch}, Verse ${vs}`;
+  localStorage.setItem('lastVerse', JSON.stringify({ ch, vs }));
   document.getElementById('slok').textContent = 'Loading…';
   document.getElementById('trl').textContent = '';
   document.getElementById('meaning').textContent = '';
@@ -324,11 +325,21 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') document.getElementById('prev').click();
   if (e.key === 'ArrowRight') document.getElementById('next').click();
 });
-
+ 
+const saved = localStorage.getItem('lastVerse');
+if (saved) {
+  try {
+    const { ch: savedCh, vs: savedVs } = JSON.parse(saved);
+    ch = savedCh;
+    vs = savedVs;
+  } catch(e) {}
+}
+ 
 loadVerseCount().then(load);
 </script>
 </body>
 </html>
+
 
 
 
