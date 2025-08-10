@@ -359,17 +359,22 @@ async function getChapterNarrative(type) {
     return 'Narrative unavailable.';
   }
 }
-
 document.getElementById('clearCache').onclick = () => {
   if (confirm("Clear cached AI context? Your last read verse will be kept.")) {
-    Object.keys(sessionStorage).forEach(key => {
-      if (key.startsWith('ctx:')) sessionStorage.removeItem(key);
-    });
+    // Remove AI caches from *localStorage* (keep lastVerse)
+    const toDelete = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && (k.startsWith('ctx:') || k.startsWith('narrative:'))) {
+        toDelete.push(k);
+      }
+    }
+    toDelete.forEach(k => localStorage.removeItem(k));
+
     alert("Context cache cleared!");
     load(); // reload current verse from API
   }
 };
-
 /* ---------- Main load ---------- */
 async function load(){
   localStorage.setItem('lastVerse', JSON.stringify({ ch, vs }));
@@ -469,6 +474,7 @@ loadVerseCount().then(load);
 
 </body>
 </html>
+
 
 
 
