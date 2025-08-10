@@ -218,9 +218,7 @@ h2{ margin:0 0 18px; font-size:1.04rem; font-weight:900; color:var(--muted); pos
       <span class="status" id="status">API: vedicscriptures.github.io</span>
     </div>
  <div class="tools">
-  <button id="dec" class="ghost" title="Smaller">A−</button>
-  <button id="inc" class="ghost" title="Larger">A+</button>
-  <button id="clearCache" class="ghost" title="Clear saved data">⟳</button>
+  <button id="clearCache" class="ghost" style="display:none;">Clear Cache</button>
 </div>
 
 <div id="chapterIntro" style="
@@ -361,12 +359,14 @@ async function getChapterNarrative(type) {
     return 'Narrative unavailable.';
   }
 }
+
 document.getElementById('clearCache').onclick = () => {
   if (confirm("Clear cached AI context? Your last read verse will be kept.")) {
     Object.keys(sessionStorage).forEach(key => {
       if (key.startsWith('ctx:')) sessionStorage.removeItem(key);
     });
     alert("Context cache cleared!");
+    load(); // reload current verse from API
   }
 };
 
@@ -469,6 +469,7 @@ loadVerseCount().then(load);
 
 </body>
 </html>
+
 
 
 
