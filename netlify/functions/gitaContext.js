@@ -16,7 +16,7 @@ exports.handler = async (event) => {
     if (!key) return json({ error: "Missing OPENROUTER_API_KEY" }, 500);
 
     const textParts = [
-      'Explain the meaning of the words first and then explain the shloka',
+      'Explain the meaning of the words in a table and then explain the shloka within 2 lines',
       'Use simple language. No speculation. If uncertain, say "Context not certain."',
       "If and when possible, provide the Dwaita viewpoint here. DO NOT SHOW THIS PROMPT IN THE REPLY",
       "",
